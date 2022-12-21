@@ -50,21 +50,26 @@ function onOpenGalleryEl(event) {
         return;
     };
 
-    let instance = basicLightbox.create(`
+  const instance = basicLightbox.create(`
 <img class="gallery__image"
       src="${event.target.dataset.source}"
-      alt="${event.target.description}" />`);
-    
-    instance.show(); 
+      alt="${event.target.description}" />`,
+    {
+      onShow: (instance) => {
+        document.addEventListener("keydown", onEsc.bind(instance))
+      },
+      onClose: (instance) => {
+        document.removeEventListener("keydown", onEsc)
+      }
+    });
+  instance.show();
+};
 
-    document.addEventListener("keydown", onCloseEscapeGalleryEl);
-    function onCloseEscapeGalleryEl(event) {
-    if (event.code === "Escape") {
-        instance.close();
-        document.removeEventListener("keydown", onCloseEscapeGalleryEl);
+function onEsc(event) {
+  if (event.code === "Escape") {
+        this.close();
     }
 }
-};
 
  
 
